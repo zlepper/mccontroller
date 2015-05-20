@@ -3,35 +3,42 @@ var socket = null;
 var http = require("http");
 var fs = require("fs");
 var path = require("path");
+var mkdirp = require("mkdirp");
 
 function installForge(data) {
-    var f = path.resolve(__dirname, "server", "forge", "forge-" + data.forgeVersion + "-installer.jar");
-    var file = fs.createWriteStream(f);
-    emit("installationStatus:downloadStarting", null);
-    http.get(data.forgeUrl, function(response) {
-        var length = parseInt(response.headers["content-length"]);
-        var current = 0;
-        var progress = 0;
-        response.on("data", function(chunk) {
-            current +=  chunk.length;
-            var newProgress = Math.floor(current/length*100);
-            if(progress != newProgress) {
-                progress = newProgress;
-                emit("installationStatus:download", progress);
-            }
-        });
+    var dir = path.resolve(__dirname, "server", "forge");
+    mkdirp(dir, function (err) {
+        if(err) {
+            return;
+        }
+        var f = path.resolve(dir, "forge-" + data.forgeVersion + "-installer.jar");
+        var file = fs.createWriteStream(f);
+        emit("installationStatus:downloadStarting", null);
+        http.get(data.forgeUrl, function (response) {
+            var length = parseInt(response.headers["content-length"]);
+            var current = 0;
+            var progress = 0;
+            response.on("data", function (chunk) {
+                current += chunk.length;
+                var newProgress = Math.floor(current / length * 100);
+                if (progress != newProgress) {
+                    progress = newProgress;
+                    emit("installationStatus:download", progress);
+                }
+            });
 
-        response.on("end", function() {
-            emit("installationStatus:downloadComplete", null);
-            //installForgeInstall(f);
-        });
+            response.on("end", function () {
+                emit("installationStatus:downloadComplete", null);
+                installForgeInstall(f);
+            });
 
-        response.on("error", function(error) {
-           emit("installationStatus:error", error);
-        });
-        response.pipe(file);
-    })
-}
+            response.on("error", function (error) {
+                emit("installationStatus:error", error);
+            });
+            response.pipe(file);
+        })
+    });
+};
 
 function installForgeInstall(forge) {
     var serverDir = path.resolve(__dirname, "server");
@@ -40,19 +47,20 @@ function installForgeInstall(forge) {
         cwd: serverDir
     };
     var spawn = require("child_process").spawn;
+    emit("installationStatus:installStarting", null);
     var listener = spawn("java", ["-jar", forge, "--installServer"], options);
-    listener.stdout.on("data", function(data) {
+    listener.stdout.on("data", function (data) {
         emit("installationStatus:stdout", data);
     });
 
-    listener.stderr.on("data", function(data) {
+    listener.stderr.on("data", function (data) {
         console.log("stderr: " + data);
         emit("installationStatus:stderr", data);
     });
 
-    listener.on("close", function(code) {
+    listener.on("close", function (code) {
         console.log("Installation finished with code" + code);
-        if(code == 0) {
+        if (code == 0) {
             emit("installationStatus:success", null);
         } else {
             emit("installationStatus:error", code);
@@ -61,20 +69,21 @@ function installForgeInstall(forge) {
 }
 
 function emit(event, data) {
-    console.log(data);
-    if(socket != null) {
-        socket.emit(event, data);
-        socket.broadcast.emit(event, data);
+    var sdata = String(data);
+    console.log(sdata);
+    if (socket != null) {
+        socket.emit(event, sdata);
+        socket.broadcast.emit(event, sdata);
     }
 }
 
-module.exports = function(i) {
-	io = i;
+module.exports = function (i) {
+    io = i;
 
-    io.on("connection", function(s) {
+    io.on("connection", function (s) {
         socket = s;
 
-        s.on("setup:installForge", function(data) {
+        s.on("setup:installForge", function (data) {
             installForge(data);
         });
     })

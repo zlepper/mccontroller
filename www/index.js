@@ -85,13 +85,14 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
 	$scope.forgeversions = null;
 	$scope.forgeversion = null;
 	$scope.selectedMC = null;
+	$scope.installing = false;
+	$scope.installationMessages = [];
 
 	log = function() {
 		console.log($scope);
 	};
 
 	$http.get("/forgedata").success(function (data, status, headers, config) {
-		console.log("Got data");
 		for (var key in data.number) {
 			var forgeVersion = data.number[key];
 			if (forgeVersion.build < 879 || forgeVersion.mcversion == "1.7.10_pre4") {
@@ -133,12 +134,31 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
 			console.log("Here");
 			$scope.downloading = false;
 			$scope.downloadProgress = 0;
+			$scope.$apply();
 		}, 1000);
     });
 
     socket.on("installationStatus:error", function(data) {
         console.log(data);
     });
+
+	socket.on("installationStatus:installStarting", function() {
+		$scope.installing = true;
+	});
+
+	socket.on("installationStatus:stdout", function(data) {
+		if(isNullOrWhitespace(data)) return;
+		console.log(data);
+		$scope.installationMessages.push(data);
+		$scope.installationMessages = $scope.installationMessages.slice(-6);
+	});
+
+	socket.on("installationStatus:success", function() {
+		setTimeout(function() {
+			$scope.installing = false;
+			$scope.$apply();
+		}, 3000);
+	});
 }]);
 
 app.controller("ConfigController", ["$scope", function ($scope) {

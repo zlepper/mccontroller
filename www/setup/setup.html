@@ -21,10 +21,25 @@
 		</form>
 	</div>
 </div>
-<hr>
-<div class="row">
-	<div class="col-md-12">
+<div class="row" ng-show="downloading">
+	<hr>
+	<div class="col-md-12" >
 		<small><em>Download Progress</em></small>
-		<progressbar max="100" ng-show="downloading" animate="true" class="progress-striped active" value="downloadProgress"></progressbar>
+		<progressbar max="100" animate="true" class="progress-striped active" value="downloadProgress"></progressbar>
 	</div>
+</div>
+<div class="row" ng-show="installing">
+    <hr>
+    <div class="col-md-12">
+        <h3><em>Installation Progress</em></h3>
+        <p ng-repeat="message in installationMessages track by $index">{{message}}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Install modpack</h2>
+        <form onsubmit="return false;">
+
+        </form>
+    </div>
 </div>
