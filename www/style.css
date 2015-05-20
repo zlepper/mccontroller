@@ -1,0 +1,8 @@
+textarea {
+  resize: vertical; }
+
+.animate {
+  transition: all linear 0.5s;
+  -webkit-transition: all linear 0.5s;
+  -o-transition: all linear 0.5s;
+  -moz-transition: all linear 0.5s; }

@@ -1,0 +1,5 @@
+{
+	"minMemory": 1024,
+	"maxMemory": 1024,
+	"executeable": "minecraft_server.1.8.4.jar"
+}

@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-md-12">
+		<h1>Server Management
+			<small>Manage your server here</small>
+		</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-3">
+		<div class="row">
+			<p>Server status is: {{serverStatus}}</p>
+		</div>
+		<div class="row">
+			<button data-ng-if="serverStatus === 'online'" type="button" class="btn btn-danger" data-ng-click="shutdownServer()">Stop Server</button>
+			<button data-ng-if="serverStatus === 'offline'" type="button" class="btn btn-success" data-ng-click="startServer()">Start Server</button>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="row">
+			<div class="col-md-12">
+				<textarea rows="15" data-ng-model="console" class="form-control" disabled="disabled"></textarea>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<form onsubmit="return false;" data-ng-submit="sendCommand()">
+					<div class="form-group">
+						<label for="console-input"></label>
+						<input type="text" class="form-control" id="console-input" data-ng-model="consoleinput" placeholder="Console command">
+					</div>
+					<button type="submit" class="btn btn-primary">Execute command</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
