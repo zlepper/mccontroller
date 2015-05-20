@@ -89,6 +89,12 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
     $scope.installationMessages = [];
     $scope.technicPlatformUrl = null;
     $scope.platformPackInfo = null;
+    $scope.installingPack = false;
+    $scope.modpackDownloadProgress = 0;
+    $scope.modDownloadProgress = 0;
+    $scope.modname = null;
+    $scope.downloadingSolderPack = false;
+    $scope.totalMods = 100;
 
     log = function () {
         console.log($scope);
@@ -154,15 +160,45 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
         }, 3000);
     });
 
-    $scope.$watch("technicPlatformUrl", function() {
+    $scope.$watch("technicPlatformUrl", function () {
         $scope.getPlatformInfo();
     });
 
-    $scope.installSolderPack = function() {
-
+    $scope.installSolderPack = function () {
+        if(!$scope.selectedBuild) return;
+        socket.emit("setup:installSolderPack", $scope.platformPackInfo.slug + "/" + $scope.selectedBuild);
     };
 
-    $scope.installTechnicPack = function() {
+    socket.on("modpackInstallationStatus:starting", function(solderpack) {
+        $scope.installingPack = true;
+        $scope.downloadingSolderPack = Boolean(solderpack);
+    });
+
+    socket.on("modpackInstallationStatus:totalMods", function(totalMods) {
+        $scope.totalMods = totalMods;
+    });
+
+    socket.on("modpackInstallationStatus:downloadingMod", function(mod) {
+        $scope.modname = mod.text;
+        $scope.modpackDownloadProgress = mod.number;
+    });
+
+    socket.on("modpackInstallationStatus:downloadProgressed", function(progress) {
+        $scope.modDownloadProgress = progress;
+    });
+
+    socket.on("modpackInstallationStatus:modDownloadComplete", function() {
+        $scope.modDownloadProgress = 0;
+    });
+
+    socket.on("modpackInstallationStatus:downloadComplete", function() {
+        setTimeout(function() {
+            $scope.installingPack = false;
+            $scope.$apply();
+        }, 5000);
+    });
+
+    $scope.installTechnicPack = function () {
 
     };
 
@@ -173,12 +209,11 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
         };
         $http.post("/technicPack", d).success(function (data) {
             $scope.platformPackInfo = data;
-            if($scope.platformPackInfo.solder) {
-                $http.post("/solderInfo", {url: data.solder + "modpack/" + data.name}).success(function (dat) {
+            if ($scope.platformPackInfo.solder) {
+                $scope.platformPackInfo.slug = data.solder + "modpack/" + data.name;
+                $http.post("/solderInfo", {url: $scope.platformPackInfo.slug}).success(function (dat) {
                     $scope.platformPackInfo.builds = dat.builds;
                 });
-            } else {
-
             }
         });
     }

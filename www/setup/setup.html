@@ -59,11 +59,20 @@
                 <label class="control-label" for="build">Build to install</label>
                 <select class="form-control" id="build" ng-options="build for (index, build) in platformPackInfo.builds" ng-model="selectedBuild"></select>
             </div>
-            <input type="submit" class="btn btn-default" value="Install">
+            <input type="submit" class="btn btn-default" value="Install" ng-show="selectedBuild">
         </form>
+        <div ng-show="installingPack">
+            <small><em>Total Download Progress</em></small>
+            <progressbar max="totalMods" class="progress-striped active" value="modpackDownloadProgress"></progressbar>
+            <div ng-show="downloadingSolderPack">
+                <small><strong>Downloading mod: </strong>{{modname}}</small>
+                <progressbar class="progress-striped active" animate="false" value="modDownloadProgress"></progressbar>
+            </div>
+        </div>
         <div ng-show="platformPackInfo && platformPackInfo.url">
             <p>Version {{platformPackInfo.version}} is ready to install. </p>
-            <button class="btn btn-default" ng-click="installTechnicPack()">Install {{platformPackInfo.displayName}}</button>
+            <button class="btn btn-default" ng-click="installTechnicPack()">Install {{platformPackInfo.displayName}}
+            </button>
         </div>
     </div>
 </div>
