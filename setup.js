@@ -4,15 +4,17 @@ var http = require("http");
 var fs = require("fs");
 var path = require("path");
 var mkdirp = require("mkdirp");
+var config = require("./configHandler");
 
 function installForge(data) {
     var dir = path.resolve(__dirname, "server", "forge");
     mkdirp(dir, function (err) {
-        if(err) {
+        if (err) {
             return;
         }
         var f = path.resolve(dir, "forge-" + data.forgeVersion + "-installer.jar");
         var file = fs.createWriteStream(f);
+        console.log(data.forgeUrl);
         emit("installationStatus:downloadStarting", null);
         http.get(data.forgeUrl, function (response) {
             var length = parseInt(response.headers["content-length"]);
@@ -38,11 +40,10 @@ function installForge(data) {
             response.pipe(file);
         })
     });
-};
+}
 
 function installForgeInstall(forge) {
     var serverDir = path.resolve(__dirname, "server");
-
     var options = {
         cwd: serverDir
     };
@@ -51,6 +52,15 @@ function installForgeInstall(forge) {
     var listener = spawn("java", ["-jar", forge, "--installServer"], options);
     listener.stdout.on("data", function (data) {
         emit("installationStatus:stdout", data);
+        var sdata = String(data);
+        if (sdata.indexOf("server installed successfully") > -1) {
+            console.log("FOUND!!!!!");
+            var filename = sdata.slice(sdata.lastIndexOf(" ") + 1).trim();
+            console.log(filename);
+            var configObject = config.getConfigObject();
+            configObject.executable = filename;
+            config.saveConfigObject();
+        }
     });
 
     listener.stderr.on("data", function (data) {
@@ -62,15 +72,21 @@ function installForgeInstall(forge) {
         console.log("Installation finished with code" + code);
         if (code == 0) {
             emit("installationStatus:success", null);
+            console.log(forge);
+
         } else {
             emit("installationStatus:error", code);
         }
     });
 }
 
+function updateForgeConfig() {
+
+}
+
 function emit(event, data) {
     var sdata = String(data);
-    console.log(sdata);
+    if (data) console.log(sdata);
     if (socket != null) {
         socket.emit(event, sdata);
         socket.broadcast.emit(event, sdata);

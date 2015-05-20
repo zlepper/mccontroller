@@ -9,8 +9,7 @@ function readConfig() {
 	config = JSON.parse(file);
 }
 
-function saveConfig(data) {
-	//config = data;
+function saveConfig() {
 	fs.writeFile(path.resolve(__dirname, "config.json"), JSON.stringify(config), function(err, data) {
 		if(err) {
 			console.log("Something went wront!!");

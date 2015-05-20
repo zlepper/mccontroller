@@ -20,7 +20,7 @@ function startServer() {
   var spawn = require('child_process').spawn;
   var configObject = config.getConfigObject();
   
-  listener = spawn('java', ["-Xmx" + configObject.maxMemory + "M", "-Xms" + configObject.minMemory + "M", "-jar", configObject.executeable, "nogui"], options);
+  listener = spawn('java', ["-Xmx" + configObject.maxMemory + "M", "-Xms" + configObject.minMemory + "M", "-jar", configObject.executable, "nogui"], options);
   setServerStatus("online");
   listener.stdout.on('data', function (data) {
     sendMessageToClientConsole(data);
