@@ -80,7 +80,7 @@ function installForgeInstall(forge) {
 
 function emit(event, data) {
     var sdata = String(data);
-    if (data) console.log(sdata);
+    //if (data) console.log(sdata);
     if (socket != null) {
         socket.emit(event, sdata);
         socket.broadcast.emit(event, sdata);
@@ -108,59 +108,30 @@ function installMods(mods) {
                 console.log(err);
                 return;
             }
+            console.log(mods.length);
             emit("modpackInstallationStatus:totalMods", mods.length);
             installMod(mods, mods.length);
-            /*for (var i = 0; i < mods.length; i++) {
-             var mod = mods[i];
-             var m = {
-             text: mod.name + " version " + mod.version,
-             number: i + 1
-             };
-             emit("modpackInstallationStatus:downloadingMod", m);
-             http.get(mod.url, function(res) {
-             var file = fs.createWriteStream(path.resolve(dir, mod.name + "-" + mod.version + ".zip"));
-             var length = parseInt(res.headers["content-length"]);
-             var current = 0;
-             var progress = 0;
-             res.on("data", function (chunk) {
-             current += chunk.length;
-             var newProgress = Math.floor(current / length * 100);
-             if (progress != newProgress) {
-             progress = newProgress;
-             emit("modpackInstallationStatus:downloadProgressed", progress);
-             }
-             });
-
-             res.on("end", function () {
-             emit("modpackInstallationStatus:downloadComplete", null);
-             });
-
-             res.on("error", function (error) {
-             emit("modpackInstallationStatus:error", error);
-             });
-             res.pipe(file);
-             });
-
-             }*/
         }
     );
 }
 
 function installMod(mods, length) {
+    console.log(length);
     var mod = mods.shift();
     var m = {
         text: mod.name + " version " + mod.version,
         number: length - mods.length + 1
     };
-    emit("modpackInstallationStatus:downloadingMod", m);
+    console.log(m);
+    emit("modpackInstallationStatus:downloadingMod", JSON.stringify(m));
     http.get(mod.url, function (res) {
         var file = fs.createWriteStream(path.resolve("server", "cache", mod.name + "-" + mod.version + ".zip"));
-        var length = parseInt(res.headers["content-length"]);
+        var len = parseInt(res.headers["content-length"]);
         var current = 0;
         var progress = 0;
         res.on("data", function (chunk) {
             current += chunk.length;
-            var newProgress = Math.floor(current / length * 100);
+            var newProgress = Math.floor(current / len * 100);
             if (progress != newProgress) {
                 progress = newProgress;
                 emit("modpackInstallationStatus:downloadProgressed", progress);

@@ -179,8 +179,10 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
     });
 
     socket.on("modpackInstallationStatus:downloadingMod", function(mod) {
-        $scope.modname = mod.text;
-        $scope.modpackDownloadProgress = mod.number;
+        var m = JSON.parse(String(mod));
+        console.log(m);
+        $scope.modname = m.text;
+        $scope.modpackDownloadProgress = m.number;
     });
 
     socket.on("modpackInstallationStatus:downloadProgressed", function(progress) {
