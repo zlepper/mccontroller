@@ -5,6 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var mkdirp = require("mkdirp");
 var config = require("./configHandler");
+var admzip = require("adm-zip");
 
 function installForge(data) {
     var dir = path.resolve(__dirname, "server", "forge");
@@ -71,7 +72,6 @@ function installForgeInstall(forge) {
         console.log("Installation finished with code" + code);
         if (code == 0) {
             emit("installationStatus:success", null);
-
         } else {
             emit("installationStatus:error", code);
         }
@@ -125,7 +125,8 @@ function installMod(mods, length) {
     console.log(m);
     emit("modpackInstallationStatus:downloadingMod", JSON.stringify(m));
     http.get(mod.url, function (res) {
-        var file = fs.createWriteStream(path.resolve("server", "cache", mod.name + "-" + mod.version + ".zip"));
+        var f  = path.resolve("server", "cache", mod.name + "-" + mod.version + ".zip");
+        var file = fs.createWriteStream(f);
         var len = parseInt(res.headers["content-length"]);
         var current = 0;
         var progress = 0;
@@ -140,6 +141,8 @@ function installMod(mods, length) {
 
         res.on("end", function () {
             emit("modpackInstallationStatus:modDownloadComplete", null);
+            var zip = admzip(f);
+            zip.extractAllTo(path.resolve(__dirname, "server"), true);
             if (mods.length > 0) {
                 installMod(mods, length);
             } else {
@@ -152,6 +155,11 @@ function installMod(mods, length) {
         });
         res.pipe(file);
     });
+}
+
+function unzipFile(zippath, outputfolder) {
+    var zip = admzip(zippath);
+    zip.extractAllTo(outputfolder, true);
 }
 
 module.exports = function (i) {
