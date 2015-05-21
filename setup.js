@@ -1,11 +1,13 @@
 /// <reference path="typings/node/node.d.ts"/>
 var socket = null;
-var http = require("http");
+var http = require("./webget");
 var fs = require("fs");
 var path = require("path");
 var mkdirp = require("mkdirp");
 var config = require("./configHandler");
-var admzip = require("adm-zip");
+var yauzl = require("yauzl");
+var crypto = require('crypto');
+var ifh = require("./improvedFileHandler");
 
 function installForge(data) {
     var dir = path.resolve(__dirname, "server", "forge");
@@ -15,7 +17,6 @@ function installForge(data) {
         }
         var f = path.resolve(dir, "forge-" + data.forgeVersion + "-installer.jar");
         var file = fs.createWriteStream(f);
-        console.log(data.forgeUrl);
         emit("installationStatus:downloadStarting", null);
         http.get(data.forgeUrl, function (response) {
             var length = parseInt(response.headers["content-length"]);
@@ -56,7 +57,6 @@ function installForgeInstall(forge) {
         var sdata = String(data);
         if (sdata.indexOf("server installed successfully") > -1) {
             var filename = sdata.slice(sdata.lastIndexOf(" ") + 1).trim();
-            console.log(filename);
             var configObject = config.getConfigObject();
             configObject.executable = filename;
             config.saveConfigObject();
@@ -69,7 +69,6 @@ function installForgeInstall(forge) {
     });
 
     listener.on("close", function (code) {
-        console.log("Installation finished with code" + code);
         if (code == 0) {
             emit("installationStatus:success", null);
         } else {
@@ -101,14 +100,12 @@ function installSolderPack(buildUrl) {
 }
 
 function installMods(mods) {
-    console.log(mods);
     var dir = path.resolve("server", "cache");
     mkdirp(dir, function (err) {
             if (err) {
                 console.log(err);
                 return;
             }
-            console.log(mods.length);
             emit("modpackInstallationStatus:totalMods", mods.length);
             installMod(mods, mods.length);
         }
@@ -116,50 +113,132 @@ function installMods(mods) {
 }
 
 function installMod(mods, length) {
-    console.log(length);
     var mod = mods.shift();
     var m = {
         text: mod.name + " version " + mod.version,
         number: length - mods.length + 1
     };
-    console.log(m);
     emit("modpackInstallationStatus:downloadingMod", JSON.stringify(m));
-    http.get(mod.url, function (res) {
-        var f  = path.resolve("server", "cache", mod.name + "-" + mod.version + ".zip");
-        var file = fs.createWriteStream(f);
-        var len = parseInt(res.headers["content-length"]);
-        var current = 0;
-        var progress = 0;
-        res.on("data", function (chunk) {
-            current += chunk.length;
-            var newProgress = Math.floor(current / len * 100);
-            if (progress != newProgress) {
-                progress = newProgress;
-                emit("modpackInstallationStatus:downloadProgressed", progress);
-            }
-        });
-
-        res.on("end", function () {
-            emit("modpackInstallationStatus:modDownloadComplete", null);
-            var zip = admzip(f);
-            zip.extractAllTo(path.resolve(__dirname, "server"), true);
+    var f = path.resolve("server", "cache", mod.name + "-" + mod.version + ".zip");
+    gethash(f, function (md5) {
+        if (md5 && md5 == mod.md5) {
+            unzipFile(f, path.resolve(__dirname, "server"));
             if (mods.length > 0) {
                 installMod(mods, length);
             } else {
                 emit("modpackInstallationStatus:downloadComplete", null)
             }
+            return;
+        }
+        var file = fs.createWriteStream(f);
+        http.get(mod.url, function (res) {
+            var len = parseInt(res.headers["content-length"]);
+            var current = 0;
+            var progress = 0;
+            res.pipe(file);
+            res.on("data", function (chunk) {
+                current += chunk.length;
+                var newProgress = Math.floor(current / len * 100);
+                if (progress != newProgress) {
+                    progress = newProgress;
+                    emit("modpackInstallationStatus:downloadProgressed", progress);
+                }
+            });
+
+            res.on("end", function () {
+                emit("modpackInstallationStatus:modDownloadComplete", null);
+                file.end();
+                unzipFile(f, path.resolve(__dirname, "server"));
+                if (mods.length > 0) {
+                    installMod(mods, length);
+                } else {
+                    emit("modpackInstallationStatus:downloadComplete", null)
+                }
+            });
+
+            res.on("error", function (error) {
+                emit("modpackInstallationStatus:error", error);
+            });
+        });
+    });
+}
+
+function unzipFile(zippath, outputfolder) {
+    yauzl.open(zippath, function (err, zipfile) {
+        if (err) throw err;
+        zipfile.on("entry", function (entry) {
+            // If the found entry is a directory return
+            if (/\/$/.test(entry.fileName)) {
+                // directory file names end with '/'
+                return;
+            }
+            zipfile.openReadStream(entry, function (err, readStream) {
+                if (err) throw err;
+                // ensure parent directory exists, and then:
+                var outputfile = path.resolve(outputfolder, entry.fileName);
+                var dirname = path.dirname(outputfile);
+                mkdirp(dirname, function (err) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    readStream.pipe(fs.createWriteStream(outputfile));
+                });
+            });
+        });
+    });
+}
+
+function gethash(filepath, callback) {
+    var fd = fs.createReadStream(filepath);
+    var hash = crypto.createHash("md5");
+
+    fd.on("data", function (chunk) {
+        hash.update(chunk);
+    });
+
+    fd.on("end", function () {
+        var h = hash.digest("hex");
+        callback(String(h));
+    });
+
+    fd.on("error", function (err) {
+        callback(null);
+    });
+}
+
+function installTechnicPack(data) {
+    http.get(data.url, function(res) {
+        var f = path.resolve("server", "cache", data.modpackname + ".zip");
+        var file = fs.createWriteStream(f);
+        emit("modpackInstallationStatus:totalMods", 100);
+        var len = parseInt(res.headers["content-length"]);
+        var current = 0;
+        var progress = 0;
+        res.pipe(file);
+        res.on("data", function (chunk) {
+            current += chunk.length;
+            var newProgress = Math.floor(current / len * 100);
+            if (progress != newProgress) {
+                progress = newProgress;
+                emit("modpackInstallationStatus:downloadingMod", {number: progress});
+            }
+        });
+
+        res.on("end", function () {
+            unzipFile(f, path.resolve(__dirname, "server"));
         });
 
         res.on("error", function (error) {
             emit("modpackInstallationStatus:error", error);
         });
-        res.pipe(file);
     });
 }
 
-function unzipFile(zippath, outputfolder) {
-    var zip = admzip(zippath);
-    zip.extractAllTo(outputfolder, true);
+function prepareServerDir() {
+    ifh.rmdirSync(path.resolve(__dirname, "server", "mods"));
+    ifh.rmdirSync(path.resolve(__dirname, "server", "config"));
+    ifh.rmdirSync(path.resolve(__dirname, "server", "scripts"));
 }
 
 module.exports = function (i) {
@@ -173,7 +252,14 @@ module.exports = function (i) {
         });
 
         s.on("setup:installSolderPack", function (data) {
+            prepareServerDir();
             installSolderPack(data);
+        });
+
+        s.on("setup:installTechnicPack", function (data) {
+            prepareServerDir();
+            console.log(data);
+            installTechnicPack(data);
         });
     })
 };

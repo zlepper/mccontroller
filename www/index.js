@@ -165,43 +165,51 @@ app.controller("SetupController", ["$scope", "socket", "$http", function ($scope
     });
 
     $scope.installSolderPack = function () {
-        if(!$scope.selectedBuild) return;
+        if (!$scope.selectedBuild) return;
         socket.emit("setup:installSolderPack", $scope.platformPackInfo.slug + "/" + $scope.selectedBuild);
     };
 
-    socket.on("modpackInstallationStatus:starting", function(solderpack) {
+    socket.on("modpackInstallationStatus:starting", function (solderpack) {
         $scope.installingPack = true;
         $scope.downloadingSolderPack = Boolean(solderpack);
     });
 
-    socket.on("modpackInstallationStatus:totalMods", function(totalMods) {
+    socket.on("modpackInstallationStatus:totalMods", function (totalMods) {
         $scope.totalMods = totalMods;
     });
 
-    socket.on("modpackInstallationStatus:downloadingMod", function(mod) {
+    socket.on("modpackInstallationStatus:downloadingMod", function (mod) {
         var m = JSON.parse(String(mod));
-        console.log(m);
-        $scope.modname = m.text;
+        if (m.text)
+            $scope.modname = m.text;
         $scope.modpackDownloadProgress = m.number;
     });
 
-    socket.on("modpackInstallationStatus:downloadProgressed", function(progress) {
+    socket.on("modpackInstallationStatus:downloadProgressed", function (progress) {
         $scope.modDownloadProgress = progress;
     });
 
-    socket.on("modpackInstallationStatus:modDownloadComplete", function() {
+    socket.on("modpackInstallationStatus:modDownloadComplete", function () {
         $scope.modDownloadProgress = 0;
     });
 
-    socket.on("modpackInstallationStatus:downloadComplete", function() {
-        setTimeout(function() {
+    socket.on("modpackInstallationStatus:downloadComplete", function () {
+        setTimeout(function () {
             $scope.installingPack = false;
             $scope.$apply();
         }, 5000);
     });
 
-    $scope.installTechnicPack = function () {
+    socket.on("modpackInstallationStatus:error", function (err) {
+        alert(err);
+    });
 
+    $scope.installTechnicPack = function () {
+        console.log("Called");
+        socket.emit("setup:installTechnicPack", {
+            url: $scope.platformPackInfo.url,
+            modpackname: $scope.platformPackInfo.name
+        });
     };
 
     $scope.getPlatformInfo = function () {
