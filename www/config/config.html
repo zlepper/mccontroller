@@ -1,0 +1,50 @@
+<div class="col-md-4">
+    <!-- TODO Find some better solution that actually support recursion -->
+    <div ng-if="explorer">
+        <div ng-repeat="f in explorer">
+            <div ng-if="typeof('string', f)">
+                <p ng-click="loadFile(f)">{{f}}</p>
+            </div>
+            <div ng-if="typeof('object', f)">
+                <div ng-repeat="(di,fi) in f">
+                    <p>{{di}}</p>
+
+                    <div class="indent" ng-repeat="fil in fi">
+                        <div ng-if="typeof('string', fil)">
+                            <p ng-click="loadFile(di + '/' + fil)">{{fil}}</p>
+                        </div>
+                        <div ng-if="typeof('object', fil)">
+                            <div ng-repeat="(dir,file) in fil">
+                                <p>{{dir}}</p>
+
+                                <div class="indent" ng-repeat="file1 in file">
+                                    <div ng-if="typeof('string', file1)">
+                                        <p ng-click="loadFile(di + '/' + dir + '/' + file1)">{{file1}}</p>
+                                    </div>
+                                    <div ng-if="typeof('object', file1)">
+                                        <div ng-repeat="(dir1,file2) in file1">
+                                            <p>{{dir1}}</p>
+
+                                            <div class="indent" ng-repeat="file3 in file2">
+                                                <div ng-if="typeof('string', file3)">
+                                                    <p ng-click="loadFile(di + '/' + dir + '/' + dir1 + '/' + file3)">
+                                                        {{file3}}</p>
+                                                </div>
+                                                <div ng-if="typeof('object', file3)">
+                                                    {{file3}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-8">
+    <!-- TODO Display selected file here -->
+</div>

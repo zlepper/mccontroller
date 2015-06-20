@@ -1,0 +1,14 @@
+<div ng-repeat="(di, values) in dir">
+    <p>{{di}}</p>
+
+    <div class="indent">
+        <div ng-repeat="f in values">
+            <div ng-if="::typeof('string', f)">
+                <p>{{f}}</p>
+            </div>
+            <div ng-if="::typeof('object', f)">
+                <directory dir="f"></directory>
+            </div>
+        </div>
+    </div>
+</div>

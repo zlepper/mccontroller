@@ -37,6 +37,7 @@
         <p ng-repeat="message in installationMessages track by $index">{{message}}</p>
     </div>
 </div>
+<hr>
 <div class="row">
     <div class="col-md-12">
         <h2>Install modpack - Technic</h2>
@@ -47,13 +48,13 @@
                 <input class="form-control" type="url" ng-model="technicPlatformUrl" id="technicPlatformUrl">
             </div>
         </form>
-        <dív class="row" ng-show="platformPackInfo">
+        <div ng-show="platformPackInfo">
             <p><strong>Pack name: </strong>{{platformPackInfo.displayName}}</p>
 
             <p><strong>Description: </strong>{{platformPackInfo.description}}</p>
 
             <p><strong>Minecraft version: </strong>{{platformPackInfo.minecraft}}</p>
-        </dív>
+        </div>
         <form onsubmit="return false;" ng-show="platformPackInfo && platformPackInfo.builds" ng-submit="installSolderPack()">
             <div class="form-group">
                 <label class="control-label" for="build">Build to install</label>
@@ -61,28 +62,78 @@
             </div>
             <input type="submit" class="btn btn-default" value="Install" ng-show="selectedBuild">
         </form>
+        <div ng-show="platformPackInfo && platformPackInfo.url">
+            <p>Version {{platformPackInfo.version}} is ready to install. </p>
+            <button class="btn btn-default" ng-click="installTechnicPack()">Install {{platformPackInfo.displayName}}
+            </button>
+        </div>
         <div ng-show="installingPack">
-            <small><em>Total Download Progress</em></small>
+            <small><em>Total Download Progress</em> {{modpackDownloadProgress}}%</small>
             <progressbar max="totalMods" class="progress-striped active" value="modpackDownloadProgress"></progressbar>
             <div ng-show="downloadingSolderPack">
                 <small><strong>Downloading mod: </strong>{{modname}}</small>
                 <progressbar class="progress-striped active" animate="false" value="modDownloadProgress"></progressbar>
             </div>
         </div>
-        <div ng-show="platformPackInfo && platformPackInfo.url">
-            <p>Version {{platformPackInfo.version}} is ready to install. </p>
-            <button class="btn btn-default" ng-click="installTechnicPack()">Install {{platformPackInfo.displayName}}
-            </button>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Install custom mod</h3>
+
+        <form onsubmit="return false;" ng-submit="installCustomModFromUrl()">
+            <div class="form-group">
+                <label for="custommodurl" class="control-label">File url</label>
+                <input id="custommodurl" type="url" ng-model="customModURL" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="custommodname" class="control-label">Mod name</label>
+                <input id="custommodname" type="text" ng-model="customModName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="custommodversion" class="control-label">Mod version</label>
+                <input id="custommodversion" type="text" ng-model="customModVersion" class="form-control">
+            </div>
+            <input type="submit" value="Download and install" class="btn btn-default">
+        </form>
+        <hr>
+        <div ngf-drop ngf-select ng-model="files" class="well"
+             ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
+             accept="*">Drop .jar- or .zip-files here or click to upload
         </div>
+        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+        <!--<progressbar ng-if="uploadProgress | keylength" ng-repeat="(name, value) in uploadProgress"
+                     value="value.progress" class="progress-striped active">value.name</progressbar>-->
     </div>
 </div>
-<div class="row">
+<hr>
+<div class="row" ng-if="!properties">
     <div class="col-md-12">
-        <h2>Install modpack - Feed-the-beast</h2>
+        <div class="alert alert-info">No server.properties file found</div>
     </div>
 </div>
-<div class="row">
+<div class="row" ng-if="properties">
     <div class="col-md-12">
-        <h2>Install modpack - ATLauncher</h2>
+        <h3>Server Properties
+            <small>
+                <button class="astext" ng-click="refreshPropFile()">Refresh</button>
+            </small>
+            <input type="submit" value="Save" class="btn btn-default" form="propsform">
+        </h3>
+        <form onsubmit="return false;" ng-submit="savePropFile()" class="form-horizontal" id="propsform">
+            <div class="form-group" ng-repeat="(key, value) in properties">
+                <div>
+                    <label class="control-label col-sm-2">{{key}}</label>
+
+                    <div class="col-sm-10">
+                        <input ng-if="::typeof('boolean', value.v)" type="checkbox" ng-model="value.v">
+                        <input ng-if="::typeof('object', value.v)" type="text" ng-model="value.v.value" class="form-control">
+                        <input ng-if="::typeof('number', value.v)" type="number" ng-model="value.v" class="form-control">
+                        <input ng-if="::typeof('undefined', value.v)" type="text" ng-model="value.v" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

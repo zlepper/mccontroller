@@ -3,23 +3,87 @@
 1 verbose cli   'C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'install',
 1 verbose cli   '--save',
-1 verbose cli   'passport' ]
+1 verbose cli   'anguar' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.33
 4 verbose node symlink C:\Program Files (x86)\nodejs\\node.exe
-5 error Failed to parse json
-5 error Unexpected token }
-6 error File: c:\Users\Rasmus\Dropbox\Programering\mccontroller\package.json
-7 error Failed to parse package.json data.
-7 error package.json must be actual JSON, not just JavaScript.
-7 error
-7 error This is not a bug in npm.
-7 error Tell the package author to fix their package.json file. JSON.parse
-8 error System Windows_NT 6.2.9200
-9 error command "C:\\Program Files (x86)\\nodejs\\\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "--save" "passport"
-10 error cwd c:\Users\Rasmus\Dropbox\Programering\mccontroller
-11 error node -v v0.10.33
-12 error npm -v 1.4.28
-13 error file c:\Users\Rasmus\Dropbox\Programering\mccontroller\package.json
-14 error code EJSONPARSE
-15 verbose exit [ 1, true ]
+5 warn package.json mccontroller@1.0.0 No repository field.
+6 warn package.json mccontroller@1.0.0 No README data
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ 'anguar', null ]
+9 verbose cache add name=undefined spec="anguar" args=["anguar",null]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: 'anguar',
+10 verbose parsed url   path: 'anguar',
+10 verbose parsed url   href: 'anguar' }
+11 silly lockFile 76c06ca2-anguar anguar
+12 verbose lock anguar C:\Users\Rasmus\AppData\Roaming\npm-cache\76c06ca2-anguar.lock
+13 silly lockFile 76c06ca2-anguar anguar
+14 silly lockFile 76c06ca2-anguar anguar
+15 verbose addNamed [ 'anguar', '' ]
+16 verbose addNamed [ null, '*' ]
+17 silly lockFile 8ae62dab-anguar anguar@
+18 verbose lock anguar@ C:\Users\Rasmus\AppData\Roaming\npm-cache\8ae62dab-anguar.lock
+19 silly addNameRange { name: 'anguar', range: '*', hasData: false }
+20 verbose request where is /anguar
+21 verbose request registry https://registry.npmjs.org/
+22 verbose request id e75a199444b7ab1c
+23 verbose url raw /anguar
+24 verbose url resolving [ 'https://registry.npmjs.org/', './anguar' ]
+25 verbose url resolved https://registry.npmjs.org/anguar
+26 verbose request where is https://registry.npmjs.org/anguar
+27 info trying registry request attempt 1 at 21:39:20
+28 http GET https://registry.npmjs.org/anguar
+29 http 404 https://registry.npmjs.org/anguar
+30 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+30 verbose headers   'content-type': 'application/json',
+30 verbose headers   'cache-control': 'max-age=0',
+30 verbose headers   'content-length': '51',
+30 verbose headers   'accept-ranges': 'bytes',
+30 verbose headers   date: 'Fri, 19 Jun 2015 19:39:21 GMT',
+30 verbose headers   via: '1.1 varnish',
+30 verbose headers   age: '0',
+30 verbose headers   connection: 'keep-alive',
+30 verbose headers   'x-served-by': 'cache-fra1237-FRA',
+30 verbose headers   'x-cache': 'MISS',
+30 verbose headers   'x-cache-hits': '0',
+30 verbose headers   'x-timer': 'S1434742761.150766,VS0,VE191' }
+31 silly registry.get cb [ 404,
+31 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+31 silly registry.get     'content-type': 'application/json',
+31 silly registry.get     'cache-control': 'max-age=0',
+31 silly registry.get     'content-length': '51',
+31 silly registry.get     'accept-ranges': 'bytes',
+31 silly registry.get     date: 'Fri, 19 Jun 2015 19:39:21 GMT',
+31 silly registry.get     via: '1.1 varnish',
+31 silly registry.get     age: '0',
+31 silly registry.get     connection: 'keep-alive',
+31 silly registry.get     'x-served-by': 'cache-fra1237-FRA',
+31 silly registry.get     'x-cache': 'MISS',
+31 silly registry.get     'x-cache-hits': '0',
+31 silly registry.get     'x-timer': 'S1434742761.150766,VS0,VE191' } ]
+32 silly lockFile 8ae62dab-anguar anguar@
+33 silly lockFile 8ae62dab-anguar anguar@
+34 error 404 404 Not Found: anguar
+34 error 404
+34 error 404 'anguar' is not in the npm registry.
+34 error 404 You should bug the author to publish it
+34 error 404 It was specified as a dependency of 'mccontroller'
+34 error 404
+34 error 404 Note that you can also install from a
+34 error 404 tarball, folder, or http url, or git url.
+35 error System Windows_NT 6.2.9200
+36 error command "C:\\Program Files (x86)\\nodejs\\\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "--save" "anguar"
+37 error cwd C:\Users\Rasmus\Documents\mccontroller
+38 error node -v v0.10.33
+39 error npm -v 1.4.28
+40 error code E404
+41 verbose exit [ 1, true ]

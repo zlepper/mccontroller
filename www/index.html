@@ -2,21 +2,31 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="/style.css"/>
+        <link rel="stylesheet" href="./style.css"/>
 		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		<script src="/angular" type="text/javascript"></script>
-		<script src="/angular-route" type="text/javascript"></script>
-		<script src="/angular-animate" type="text/javascript"></script>
-		<script src="/ui-bootstrap" type="text/javascript"></script>
+        <script src="/angular/angular.js" type="text/javascript"></script>
+        <script src="/angular-animate/angular-animate.js" type="text/javascript"></script>
+        <script src="/angular-bootstrap/dist/ui-bootstrap-tpls.js" type="text/javascript"></script>
+        <script src="/ng-file-upload/dist/ng-file-upload-shim.js"></script>
+        <script src="/ng-file-upload/dist/ng-file-upload.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="/index.js"></script>
+        <script src="ui-router/angular-ui-router.js"></script>
+        <script src="./index.js"></script>
+        <script src="./routes.js"></script>
+        <script src="./setup/setup.js"></script>
+        <script src="./dashboard/dashboard.js"></script>
+        <script src="./config/config.js"></script>
+        <script src="./filters/keylength.js"></script>
+        <script src="./factories/socket.js"></script>
+        <script src="./directives/menu.js"></script>
+        <script src="./directives/directory.js"></script>
 	</head>
 	<body data-ng-app="server">
 		<div>
 			<menu-bar></menu-bar>
 		</div>
-		<div class="container" ng-view>
+        <div class="container" ui-view="">
 			
 		</div>
 	</body>

@@ -6,8 +6,10 @@ var auth = require("http-auth");
 var express = require("express");
 var http = require("http");
 var app = express();
+var apiApp = express();
 var bodyParser = require("body-parser");
 var io = null;
+var routes = require("./routes/routes");
 
 var basic = auth.basic({
     realm: "mcserver",
@@ -17,98 +19,23 @@ var basic = auth.basic({
 app.use(auth.connect(basic));
 app.use(bodyParser.json({}));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("www"));
+app.use(express.static("node_modules"));
 
-app.get("/", function (request, responce) {
-    responce.sendFile(path.resolve("www", "index.html"));
-});
-
-app.get("/dashboard", function (request, responce) {
-    responce.sendFile(path.resolve("www", "dashboard", "dashboard.html"));
-});
-
-// Map the menu template to the "/menu" path
-app.get("/menu", function (request, responce) {
-    responce.sendFile(path.resolve("www", "menu.html"));
-});
-
-app.get("/setup", function (request, responce) {
-    responce.sendFile(path.resolve("www", "setup", "setup.html"));
-});
-
-app.get("/config", function (request, responce) {
-    responce.sendFile(path.resolve("www", "config", "config.html"));
-});
-
-// Map the index.js file to the "/index.js" path
-app.get("/index.js", function (request, responce) {
-    responce.sendFile(path.resolve("www", "index.js"));
-});
-
-app.get("/angular", function (request, responce) {
-    responce.sendFile(path.resolve("www", "lib", "angular.js"));
-});
-
-app.get("/angular.min.js.map", function (req, res) {
-    res.sendFile(path.resolve("www", "lib", "angular.min.js.map"));
-});
-
-app.get("/angular-route", function (request, responce) {
-    responce.sendFile(path.resolve("www", "lib", "angular-route.js"));
-});
-
-app.get("/angular-route.min.js.map", function (req, res) {
-    res.sendFile(path.resolve("www", "lib", "angular-route.min.js.map"));
-});
-
-app.get("/angular-animate", function (req, res) {
-    res.sendFile(path.resolve("www", "lib", "angular-animate.js"));
-});
-
-app.get("/ui-bootstrap", function (req, res) {
-    res.sendFile(path.resolve("www", "lib", "ui-bootstrap-tpls-0.13.0.js"));
-});
-
-app.get("/forgedata", function (request, response) {
-    http.get("http://files.minecraftforge.net/maven/net/minecraftforge/forge/json", function (res) {
-        res.pipe(response);
-    });
-});
-
-// Map the stylesheet to the "/style.css" path
-app.get("/style.css", function (request, responce) {
-    responce.sendFile(path.resolve("www", "style.css"));
-});
-
-app.post("/technicPack", function(request, response) {
-    http.get("http://api.technicpack.net/launcher/version/stable", function(res) {
-        var body = "";
-        res.on("data", function(chunk) {
-            body += chunk;
-        });
-        res.on("end", function() {
-            var technicResponse = JSON.parse(body);
-            http.get(request.body.url + "?build=" + technicResponse.build, function(r) {
-                r.pipe(response);
-            });
-        });
-    }).on("error", function(e) {
-        console.log(e);
-    });
-});
-
-app.post("/solderInfo", function(request, response) {
-    http.get(request.body.url, function(res) {
-        res.pipe(response);
-    })
-});
+routes(app);
 
 var server = require("http").Server(app);
-var serverController = require("./serverController");
+var apiServer = require("http").Server(apiApp);
+var serverController = require("./bin/serverController");
 
 // Start the application on port 8080
 server.listen("8080", function () {
     console.log("Application is now listening in port 8080");
     io = require("socket.io")(server);
-    var setup = require("./setup")(io);
+    var setup = require("./bin/setup")(io);
     serverController.init(io);
+});
+
+apiServer.listen(8081, function () {
+    console.log("API is now listening in port 8081");
 });

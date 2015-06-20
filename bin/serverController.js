@@ -4,7 +4,7 @@ var listener = null;
 var io = null;
 var socket = null;
 var lastMessages = [];
-var config = require("./configHandler");
+var config = require("../handlers/configHandler");
 var serverStatus = "offline";
 
 /**
@@ -12,15 +12,18 @@ var serverStatus = "offline";
  */
 function startServer() {
   var path = require('path');
-  var serverDir = path.resolve(__dirname, "server");
+    var serverDir = path.resolve(__dirname, "..", "server");
 
   var options = {
     cwd: serverDir
   };
   var spawn = require('child_process').spawn;
-  var configObject = config.getConfigObject();
+    var configObject = config.loadConfigObj();
   
   listener = spawn('java', ["-Xmx" + configObject.maxMemory + "M", "-Xms" + configObject.minMemory + "M", "-jar", configObject.executable, "nogui"], options);
+    listener.on("error", function (err) {
+        console.log(err);
+    });
   setServerStatus("online");
   listener.stdout.on('data', function (data) {
     sendMessageToClientConsole(data);
@@ -61,7 +64,7 @@ function emit(event, data) {
  */
 function stopServer() {
   sendCommand("stop");
-};
+}
 
 function sendCommand(command) {
   if (listener !== null) {

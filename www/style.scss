@@ -8,3 +8,37 @@ textarea {
 	-o-transition: all linear 0.5s;
 	-moz-transition: all linear 0.5s;
 }
+
+button.astext {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+    border: 0;
+  }
+}
+
+.drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 200px;
+  height: 65px;
+  text-align: center;
+  padding-top: 25px;
+  margin: 10px;
+}
+
+.dragover {
+  background: linear-gradient(greenyellow, darken(greenyellow, 20%));
+}
+
+.indent {
+  padding-left: 15px;
+}
+

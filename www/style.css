@@ -6,3 +6,29 @@ textarea {
   -webkit-transition: all linear 0.5s;
   -o-transition: all linear 0.5s;
   -moz-transition: all linear 0.5s; }
+
+button.astext {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0; }
+  button.astext:hover {
+    cursor: pointer; }
+  button.astext:focus {
+    outline: none;
+    border: 0; }
+
+.drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 200px;
+  height: 65px;
+  text-align: center;
+  padding-top: 25px;
+  margin: 10px; }
+
+.dragover {
+  background: linear-gradient(greenyellow, #79c800); }
+
+.indent {
+  padding-left: 15px; }

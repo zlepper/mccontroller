@@ -4,10 +4,11 @@ var http = require("./webget");
 var fs = require("fs");
 var path = require("path");
 var mkdirp = require("mkdirp");
-var config = require("./configHandler");
+var config = require("./../handlers/configHandler");
 var yauzl = require("yauzl");
 var crypto = require('crypto');
-var ifh = require("./improvedFileHandler");
+var ifh = require("./../handlers/improvedFileHandler");
+var propParser = require("./../handlers/propertiesParser");
 
 function installForge(data) {
     var dir = path.resolve(__dirname, "server", "forge");
@@ -57,9 +58,9 @@ function installForgeInstall(forge) {
         var sdata = String(data);
         if (sdata.indexOf("server installed successfully") > -1) {
             var filename = sdata.slice(sdata.lastIndexOf(" ") + 1).trim();
-            var configObject = config.getConfigObject();
+            var configObject = config.loadConfigObj();
             configObject.executable = filename;
-            config.saveConfigObject();
+            config.saveConfig();
         }
     });
 
@@ -208,28 +209,32 @@ function gethash(filepath, callback) {
 }
 
 function installTechnicPack(data) {
-    http.get(data.url, function(res) {
+    http.get(data.url, function (res) {
         var f = path.resolve("server", "cache", data.modpackname + ".zip");
         var file = fs.createWriteStream(f);
         emit("modpackInstallationStatus:totalMods", 100);
+        emit("modpackInstallationStatus:starting", false);
         var len = parseInt(res.headers["content-length"]);
         var current = 0;
         var progress = 0;
         res.pipe(file);
         res.on("data", function (chunk) {
             current += chunk.length;
-            var newProgress = Math.floor(current / len * 100);
+            var newProgress = Math.round(current / len * 100 * 10) / 10;
             if (progress != newProgress) {
                 progress = newProgress;
-                emit("modpackInstallationStatus:downloadingMod", {number: progress});
+                emit("modpackInstallationStatus:downloadingMod", JSON.stringify({number: progress}));
             }
         });
 
         res.on("end", function () {
+            file.end();
+            emit("modpackInstallationStatus:downloadComplete", null)
             unzipFile(f, path.resolve(__dirname, "server"));
         });
 
         res.on("error", function (error) {
+            console.log(error);
             emit("modpackInstallationStatus:error", error);
         });
     });
@@ -239,6 +244,26 @@ function prepareServerDir() {
     ifh.rmdirSync(path.resolve(__dirname, "server", "mods"));
     ifh.rmdirSync(path.resolve(__dirname, "server", "config"));
     ifh.rmdirSync(path.resolve(__dirname, "server", "scripts"));
+}
+
+function downloadAndInstallMod(data) {
+    // Save the mod so it's installed each time
+    var configObj = config.loadConfigObj();
+    if (!configObj.customMods) {
+        configObj.customMods = [];
+    }
+    configObj.customMods.push(data);
+
+    http.get(data.url, function (res) {
+        var file = path.resolve(__dirname, "server", "mods", data.name + "-" + data.version + ".jar");
+        var f = fs.createWriteStream(file);
+        emit("setup:installingMod", JSON.stringify({name: data.name + "-" + data.version}));
+        res.on("end", function () {
+            f.end();
+            emit("setup:installationFinished", JSON.stringify({name: data.name + "-" + data.version}));
+        });
+        res.pipe(f);
+    });
 }
 
 module.exports = function (i) {
@@ -253,13 +278,34 @@ module.exports = function (i) {
 
         s.on("setup:installSolderPack", function (data) {
             prepareServerDir();
-            installSolderPack(data);
+            installSolderPack(data.url);
+            var configObj = config.loadConfigObj();
+            configObj.installType = "solder";
+            configObj.install = data;
+            config.saveConfig();
         });
 
         s.on("setup:installTechnicPack", function (data) {
             prepareServerDir();
-            console.log(data);
             installTechnicPack(data);
+            var configObj = config.loadConfigObj();
+            configObj.installType = "technic";
+            configObj.install = data;
+            config.saveConfig();
+        });
+
+        s.on("get:serverProperties", function () {
+            propParser.readFile(function (properties) {
+                socket.emit("respond:serverProperties", JSON.stringify(properties));
+            });
+        });
+
+        s.on("post:serverProperties", function (data) {
+            propParser.saveFile(data);
+        });
+
+        s.on("setup:installCustomMod", function (data) {
+            downloadAndInstallMod(JSON.parse(data));
         });
     })
 };
