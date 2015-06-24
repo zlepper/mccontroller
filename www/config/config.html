@@ -1,7 +1,9 @@
 <div class="col-md-4">
     <!-- TODO Find some better solution that actually support recursion -->
     <div ng-if="explorer">
-        <div ng-repeat="f in explorer">
+        <input type="text" ng-model="q" class="form-control" placeholder="search"/>
+
+        <div ng-repeat="f in explorer|filter:q">
             <div ng-if="typeof('string', f)">
                 <p ng-click="loadFile(f)">{{f}}</p>
             </div>
@@ -9,7 +11,7 @@
                 <div ng-repeat="(di,fi) in f">
                     <p>{{di}}</p>
 
-                    <div class="indent" ng-repeat="fil in fi">
+                    <div class="indent" ng-repeat="fil in fi|filter:q">
                         <div ng-if="typeof('string', fil)">
                             <p ng-click="loadFile(di + '/' + fil)">{{fil}}</p>
                         </div>
@@ -17,7 +19,7 @@
                             <div ng-repeat="(dir,file) in fil">
                                 <p>{{dir}}</p>
 
-                                <div class="indent" ng-repeat="file1 in file">
+                                <div class="indent" ng-repeat="file1 in file|filter:q">
                                     <div ng-if="typeof('string', file1)">
                                         <p ng-click="loadFile(di + '/' + dir + '/' + file1)">{{file1}}</p>
                                     </div>
@@ -25,7 +27,7 @@
                                         <div ng-repeat="(dir1,file2) in file1">
                                             <p>{{dir1}}</p>
 
-                                            <div class="indent" ng-repeat="file3 in file2">
+                                            <div class="indent" ng-repeat="file3 in file2|filter:q">
                                                 <div ng-if="typeof('string', file3)">
                                                     <p ng-click="loadFile(di + '/' + dir + '/' + dir1 + '/' + file3)">
                                                         {{file3}}</p>
@@ -47,4 +49,84 @@
 </div>
 <div class="col-md-8">
     <!-- TODO Display selected file here -->
+    <div ng-if="fileDetails">
+        <h1>{{filePath}}</h1>
+
+        <div ng-repeat="(category, value) in fileDetails" ng-if="category != 'type'">
+            <h2>{{category}}</h2>
+
+            <div ng-repeat="(k, v) in value">
+                <form class="form-horizontal" ng-if="v.value != null">
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label" title="{{k}}">{{k}}</label>
+
+                        <div class="col-sm-7">
+                            <input ng-if="::typeof('boolean', v.value)" type="checkbox" ng-model="v.value">
+                            <input ng-if="::typeof('object', v.value) && v.value.length == null" type="text" ng-model="v.value" class="form-control">
+                            <input ng-if="::typeof('number', v.value)" type="number" ng-model="v.value" class="form-control">
+                            <input ng-if="::typeof('undefined', v.value)" type="text" ng-model="v.value" class="form-control">
+                            <input ng-if="::typeof('string', v.value)" type="text" ng-model="v.value" class="form-control">
+
+                            <div ng-if="::typeof('object', v.value) && v.value.length != null">
+                                <div class="item-list">
+                                    <input type="text" ng-repeat="l in v.value track by $index" ng-model="l">
+                                    <button ng-click="v.value.push('')">Add new</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <h3 ng-if="v.value == null">{{k}}</h3>
+
+                <div ng-repeat="(ke, va) in v track by $index">
+                    <form class="form-horizontal" ng-if="va.value != null">
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label" title="{{ke}}">{{ke}}</label>
+
+                            <div class="col-sm-7">
+                                <input ng-if="::typeof('boolean', va.value)" type="checkbox" ng-model="va.value">
+                                <input ng-if="::typeof('object', va.value) && va.value.length == null" type="text" ng-model="va.value" class="form-control">
+                                <input ng-if="::typeof('number', va.value)" type="number" ng-model="va.value" class="form-control">
+                                <input ng-if="::typeof('undefined', va.value)" type="text" ng-model="va.value" class="form-control">
+                                <input ng-if="::typeof('string', va.value)" type="text" ng-model="va.value" class="form-control">
+
+                                <div ng-if="::typeof('object', va.value) && va.value.length != null">
+                                    <div class="item-list">
+                                        <input type="text" ng-repeat="l in va.value track by $index" ng-model="l">
+                                        <button ng-click="va.value.push('')">Add new</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div ng-if="va.value == null">
+                        <h4>{{ke}}</h4>
+
+                        <div ng-repeat="(keh, val) in va track by $index">
+                            <form class="form-horizontal" ng-if="val.value != null">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" title="{{keh}}">{{keh}}</label>
+
+                                    <div class="col-sm-7">
+                                        <input ng-if="::typeof('boolean', val.value)" type="checkbox" ng-model="val.value">
+                                        <input ng-if="::typeof('object', val.value) && val.value.length == null" type="text" ng-model="val.value" class="form-control">
+                                        <input ng-if="::typeof('number', val.value)" type="number" ng-model="val.value" class="form-control">
+                                        <input ng-if="::typeof('undefined', val.value)" type="text" ng-model="val.value" class="form-control">
+                                        <input ng-if="::typeof('string', val.value)" type="text" ng-model="val.value" class="form-control">
+
+                                        <div ng-if="::typeof('object', val.value) && val.value.length != null">
+                                            <div class="item-list">
+                                                <input type="text" ng-repeat="l in val.value track by $index" ng-model="l">
+                                                <button ng-click="val.value.push('')">Add new</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

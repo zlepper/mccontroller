@@ -18,17 +18,52 @@ button.astext {
     outline: none;
     border: 0; }
 
-.drop-box {
-  background: #F8F8F8;
-  border: 5px dashed #DDD;
-  width: 200px;
-  height: 65px;
-  text-align: center;
-  padding-top: 25px;
-  margin: 10px; }
-
 .dragover {
   background: linear-gradient(greenyellow, #79c800); }
 
 .indent {
   padding-left: 15px; }
+
+.item-list input {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.5em;
+    color: #555;
+    background-color: #FFF;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    border-top: none;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+.item-list input:focus {
+    border-color: #66AFE9;
+    outline: 0 none;
+    box-shadow: 0 1px 1px rgpa(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.item-list button {
+    width: 100%;
+    display: block;
+    height: 34px;
+    padding: 6px 12px;
+    background: none;
+    border: 1px solid #CCC;
+    border-top: none;
+    margin: 0;
+}
+
+.item-list > :first-child {
+    border-top: 1px solid #CCC;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.item-list > :last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}

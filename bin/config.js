@@ -19,11 +19,49 @@ function readConfigFile(p) {
     //console.log(data);
     if (p.indexOf(".cfg") != -1) {
         return parseAsCfg(data);
+    } else if (p.indexOf(".conf") != -1) {
+        return parseAsConf(data);
     }
 }
 
 function parseAsConf(data) {
     var configObj = {type: "conf"};
+    var lines = data.replace(/\r/g, "").split("\n");
+    var inCat = false;
+    var category = "";
+    var comment = "";
+    lines.forEach(function (line) {
+        line = line.trim();
+        if (line != "") {
+            if (line.indexOf("##") != -1) {
+                // We are in either the start of the end of a category definition
+                inCat = !inCat;
+            } else if (inCat) {
+                category = line.replace(/#/g, "").trim();
+            } else if (line.indexOf("#") == 0) {
+                comment = line;
+            } else {
+                // We should be at a value
+                var l = line.split("=");
+                var prop = l[0];
+                var v = l[1];
+                if (v != "") {
+                    if (v == "false" || v == "true") {
+                        v = Boolean(v);
+                    } else {
+                        if (!isNaN(Number(v))) {
+                            v = Number(v);
+                        }
+                    }
+                }
+                var value = {comment: comment, value: v};
+                if (configObj[category] == null) configObj[category] = {};
+                configObj[category][prop] = value;
+                comment = "";
+            }
+        }
+    });
+    return configObj;
 }
 
 function parseAsCfg(data) {
@@ -47,8 +85,10 @@ function parseAsCfg(data) {
             } else {
                 if (inList) {
                     if (line.indexOf(">") == -1) {
-                        obj[prop].push(line);
+                        obj[prop].value.push(line);
                     } else {
+                        //obj[prop].value = obj[prop].value.join("\n");
+                        //console.log(obj[prop].value);
                         inList = false;
                         obj = null;
                     }
@@ -92,14 +132,14 @@ function parseAsCfg(data) {
                         inList = true;
                         l = line.split(":");
                         prop = l[1].replace(/</g, "").trim();
-
+                        value = {comment: comment, value: []};
                         obj = null;
                         if (category.indexOf("/") == -1) {
                             // We are in a toplevel category
                             if (configObj[category] == null) {
                                 configObj[category] = {};
                             }
-                            configObj[category][prop] = [];
+                            configObj[category][prop] = value;
                             obj = configObj[category];
                         } else {
                             // We are in some deep trouble
@@ -117,10 +157,10 @@ function parseAsCfg(data) {
                                     obj = obj[cats[i]];
                                 }
                             }
-                            obj[prop] = [];
+                            obj[prop] = value;
                         }
 
-                    } else if (line.indexOf("I:") == 0) {
+                    } else if (line.indexOf("I:") == 0 || line.indexOf("D:") == 0) {
                         // This is a number
                         l = line.split(":");
                         l = l[1].split("=");
