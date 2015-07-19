@@ -1,7 +1,7 @@
-# mccontroller
+# MCController
 A web gui to help control minecraft Servers
 
-#installation
+#Installation
 Make sure to install nodejs for your OS. https://nodejs.org/
 
 Clone mccontroller of Github `git clone https://github.com/zlepper/mccontroller.git`
