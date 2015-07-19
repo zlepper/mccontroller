@@ -1,89 +1,111 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'C:\\Program Files (x86)\\nodejs\\\\node.exe',
-1 verbose cli   'C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'install',
-1 verbose cli   '--save',
-1 verbose cli   'anguar' ]
-2 info using npm@1.4.28
-3 info using node@v0.10.33
-4 verbose node symlink C:\Program Files (x86)\nodejs\\node.exe
+1 verbose cli   'jQuery-File-Upload' ]
+2 info using npm@2.11.3
+3 info using node@v0.12.7
+4 verbose install initial load of D:\github\mccontroller\package.json
 5 warn package.json mccontroller@1.0.0 No repository field.
-6 warn package.json mccontroller@1.0.0 No README data
-7 verbose readDependencies using package.json deps
-8 verbose cache add [ 'anguar', null ]
-9 verbose cache add name=undefined spec="anguar" args=["anguar",null]
-10 verbose parsed url { protocol: null,
-10 verbose parsed url   slashes: null,
-10 verbose parsed url   auth: null,
-10 verbose parsed url   host: null,
-10 verbose parsed url   port: null,
-10 verbose parsed url   hostname: null,
-10 verbose parsed url   hash: null,
-10 verbose parsed url   search: null,
-10 verbose parsed url   query: null,
-10 verbose parsed url   pathname: 'anguar',
-10 verbose parsed url   path: 'anguar',
-10 verbose parsed url   href: 'anguar' }
-11 silly lockFile 76c06ca2-anguar anguar
-12 verbose lock anguar C:\Users\Rasmus\AppData\Roaming\npm-cache\76c06ca2-anguar.lock
-13 silly lockFile 76c06ca2-anguar anguar
-14 silly lockFile 76c06ca2-anguar anguar
-15 verbose addNamed [ 'anguar', '' ]
-16 verbose addNamed [ null, '*' ]
-17 silly lockFile 8ae62dab-anguar anguar@
-18 verbose lock anguar@ C:\Users\Rasmus\AppData\Roaming\npm-cache\8ae62dab-anguar.lock
-19 silly addNameRange { name: 'anguar', range: '*', hasData: false }
-20 verbose request where is /anguar
-21 verbose request registry https://registry.npmjs.org/
-22 verbose request id e75a199444b7ab1c
-23 verbose url raw /anguar
-24 verbose url resolving [ 'https://registry.npmjs.org/', './anguar' ]
-25 verbose url resolved https://registry.npmjs.org/anguar
-26 verbose request where is https://registry.npmjs.org/anguar
-27 info trying registry request attempt 1 at 21:39:20
-28 http GET https://registry.npmjs.org/anguar
-29 http 404 https://registry.npmjs.org/anguar
-30 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-30 verbose headers   'content-type': 'application/json',
-30 verbose headers   'cache-control': 'max-age=0',
-30 verbose headers   'content-length': '51',
-30 verbose headers   'accept-ranges': 'bytes',
-30 verbose headers   date: 'Fri, 19 Jun 2015 19:39:21 GMT',
-30 verbose headers   via: '1.1 varnish',
-30 verbose headers   age: '0',
-30 verbose headers   connection: 'keep-alive',
-30 verbose headers   'x-served-by': 'cache-fra1237-FRA',
-30 verbose headers   'x-cache': 'MISS',
-30 verbose headers   'x-cache-hits': '0',
-30 verbose headers   'x-timer': 'S1434742761.150766,VS0,VE191' }
-31 silly registry.get cb [ 404,
-31 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-31 silly registry.get     'content-type': 'application/json',
-31 silly registry.get     'cache-control': 'max-age=0',
-31 silly registry.get     'content-length': '51',
-31 silly registry.get     'accept-ranges': 'bytes',
-31 silly registry.get     date: 'Fri, 19 Jun 2015 19:39:21 GMT',
-31 silly registry.get     via: '1.1 varnish',
-31 silly registry.get     age: '0',
-31 silly registry.get     connection: 'keep-alive',
-31 silly registry.get     'x-served-by': 'cache-fra1237-FRA',
-31 silly registry.get     'x-cache': 'MISS',
-31 silly registry.get     'x-cache-hits': '0',
-31 silly registry.get     'x-timer': 'S1434742761.150766,VS0,VE191' } ]
-32 silly lockFile 8ae62dab-anguar anguar@
-33 silly lockFile 8ae62dab-anguar anguar@
-34 error 404 404 Not Found: anguar
-34 error 404
-34 error 404 'anguar' is not in the npm registry.
-34 error 404 You should bug the author to publish it
-34 error 404 It was specified as a dependency of 'mccontroller'
-34 error 404
-34 error 404 Note that you can also install from a
-34 error 404 tarball, folder, or http url, or git url.
-35 error System Windows_NT 6.2.9200
-36 error command "C:\\Program Files (x86)\\nodejs\\\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "--save" "anguar"
-37 error cwd C:\Users\Rasmus\Documents\mccontroller
-38 error node -v v0.10.33
-39 error npm -v 1.4.28
-40 error code E404
-41 verbose exit [ 1, true ]
+6 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\adm-zip\package.json
+7 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\angular\package.json
+8 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\angular-animate\package.json
+9 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\angular-bootstrap\package.json
+10 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\angularjs\package.json
+11 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\bcrypt-nodejs\package.json
+12 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\body-parser\package.json
+13 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\dicer\package.json
+14 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\express\package.json
+15 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\express-session\package.json
+16 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\http-auth\package.json
+17 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\mkdirp\package.json
+18 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\ng-file-upload\package.json
+19 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\socket.io\package.json
+20 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\ui-router\package.json
+21 verbose installManyTop reading scoped package data from D:\github\mccontroller\node_modules\yauzl\package.json
+22 info package.json adm-zip@0.4.7 No license field.
+23 info package.json dicer@0.2.4 No license field.
+24 info package.json bcrypt-nodejs@0.0.3 No license field.
+25 info package.json socket.io@1.3.6 No license field.
+26 info package.json ui-router@0.0.1 No license field.
+27 info package.json http-auth@2.2.8 No license field.
+28 verbose readDependencies loading dependencies from D:\github\mccontroller\package.json
+29 silly cache add args [ 'jQuery-File-Upload', null ]
+30 verbose cache add spec jQuery-File-Upload
+31 silly cache add parsed spec { raw: 'jQuery-File-Upload',
+31 silly cache add   scope: null,
+31 silly cache add   name: 'jQuery-File-Upload',
+31 silly cache add   rawSpec: '',
+31 silly cache add   spec: '*',
+31 silly cache add   type: 'range' }
+32 silly addNamed jQuery-File-Upload@*
+33 verbose addNamed "*" is a valid semver range for jQuery-File-Upload
+34 silly addNameRange { name: 'jQuery-File-Upload', range: '*', hasData: false }
+35 silly mapToRegistry name jQuery-File-Upload
+36 silly mapToRegistry using default registry
+37 silly mapToRegistry registry https://registry.npmjs.org/
+38 silly mapToRegistry uri https://registry.npmjs.org/jQuery-File-Upload
+39 verbose addNameRange registry:https://registry.npmjs.org/jQuery-File-Upload not in flight; fetching
+40 verbose request uri https://registry.npmjs.org/jQuery-File-Upload
+41 verbose request no auth needed
+42 info attempt registry request try #1 at 8:26:39 PM
+43 verbose request id bc3b8193589c136f
+44 http request GET https://registry.npmjs.org/jQuery-File-Upload
+45 http 404 https://registry.npmjs.org/jQuery-File-Upload
+46 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+46 verbose headers   'content-type': 'application/json',
+46 verbose headers   'cache-control': 'max-age=0',
+46 verbose headers   'content-length': '51',
+46 verbose headers   'accept-ranges': 'bytes',
+46 verbose headers   date: 'Sun, 19 Jul 2015 18:26:35 GMT',
+46 verbose headers   via: '1.1 varnish',
+46 verbose headers   age: '0',
+46 verbose headers   connection: 'keep-alive',
+46 verbose headers   'x-served-by': 'cache-fra1240-FRA',
+46 verbose headers   'x-cache': 'MISS',
+46 verbose headers   'x-cache-hits': '0',
+46 verbose headers   'x-timer': 'S1437330395.379365,VS0,VE182' }
+47 silly get cb [ 404,
+47 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+47 silly get     'content-type': 'application/json',
+47 silly get     'cache-control': 'max-age=0',
+47 silly get     'content-length': '51',
+47 silly get     'accept-ranges': 'bytes',
+47 silly get     date: 'Sun, 19 Jul 2015 18:26:35 GMT',
+47 silly get     via: '1.1 varnish',
+47 silly get     age: '0',
+47 silly get     connection: 'keep-alive',
+47 silly get     'x-served-by': 'cache-fra1240-FRA',
+47 silly get     'x-cache': 'MISS',
+47 silly get     'x-cache-hits': '0',
+47 silly get     'x-timer': 'S1437330395.379365,VS0,VE182' } ]
+48 verbose stack Error: 404 Not Found: jQuery-File-Upload
+48 verbose stack     at CachingRegistryClient.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:245:14)
+48 verbose stack     at Request._callback (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:170:14)
+48 verbose stack     at Request.self.callback (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:354:22)
+48 verbose stack     at Request.emit (events.js:110:17)
+48 verbose stack     at Request.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1207:14)
+48 verbose stack     at Request.emit (events.js:129:20)
+48 verbose stack     at IncomingMessage.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1153:12)
+48 verbose stack     at IncomingMessage.emit (events.js:129:20)
+48 verbose stack     at _stream_readable.js:908:16
+48 verbose stack     at process._tickCallback (node.js:355:11)
+49 verbose statusCode 404
+50 verbose pkgid jQuery-File-Upload
+51 verbose cwd D:\github\mccontroller
+52 error Windows_NT 6.3.9600
+53 error argv "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "jQuery-File-Upload"
+54 error node v0.12.7
+55 error npm  v2.11.3
+56 error code E404
+57 error 404 Not Found: jQuery-File-Upload
+57 error 404
+57 error 404 'jQuery-File-Upload' is not in the npm registry.
+57 error 404 Your package name is not valid, because
+57 error 404
+57 error 404  1. name can no longer contain capital letters
+57 error 404 It was specified as a dependency of 'mccontroller'
+57 error 404
+57 error 404 Note that you can also install from a
+57 error 404 tarball, folder, http url, or git url.
+58 verbose exit [ 1, true ]

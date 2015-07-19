@@ -1,14 +1,11 @@
-<div ng-repeat="(di, values) in dir">
-    <p>{{di}}</p>
+<div class="indent" ng-repeat="file in files|filter:q">
+    <div ng-if="typeof('string', file)">
+        <p ng-click="loadFile(file)">{{file}}</p>
+    </div>
 
-    <div class="indent">
-        <div ng-repeat="f in values">
-            <div ng-if="::typeof('string', f)">
-                <p>{{f}}</p>
-            </div>
-            <div ng-if="::typeof('object', f)">
-                <directory dir="f"></directory>
-            </div>
+    <div ng-if="typeof('object', f)">
+        <div ng-repeat="(di,fi) in f">
+            <p>{{di}}</p>
         </div>
     </div>
 </div>

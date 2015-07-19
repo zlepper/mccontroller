@@ -7,19 +7,23 @@ module.exports = function (pathToSearch) {
 };
 
 function getFiles(p) {
-    var files = fs.readdirSync(p);
-    var obj = [];
-    files.forEach(function (f) {
-        var filepath = path.resolve(p, f);
-        var stats = fs.statSync(filepath);
-        if (stats.isFile()) {
-            if (f.indexOf(".cfg") != -1 || f.indexOf(".conf") != -1)
-                obj.push(f)
-        } else if (stats.isDirectory()) {
-            var o = {};
-            o[f] = getFiles(filepath);
-            obj.push(o);
-        }
-    });
-    return obj;
+    try {
+        var files = fs.readdirSync(p);
+        var obj = [];
+        files.forEach(function (f) {
+            var filepath = path.resolve(p, f);
+            var stats = fs.statSync(filepath);
+            if (stats.isFile()) {
+                if (f.indexOf(".cfg") != -1 || f.indexOf(".conf") != -1)
+                    obj.push(f)
+            } else if (stats.isDirectory()) {
+                var o = {};
+                o[f] = getFiles(filepath);
+                obj.push(o);
+            }
+        });
+        return obj;
+    } catch (err) {
+        return [];
+    }
 }

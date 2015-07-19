@@ -1,5 +1,1 @@
-{
-  "minMemory": 1024,
-  "maxMemory": 1024,
-  "executable": "forge-1.7.10-10.13.4.1470-1.7.10-universal.jar"
-}
+{"minMemory":1024,"maxMemory":1024,"executable":"forge-1.7.10-10.13.4.1492-1.7.10-universal.jar","installType":"solder","install":{"url":"http://pack.vaygrim.com/index.php/api/modpack/vaygrims-chance/1.07a","name":"Vaygrim's Chance","minecraft":"1.7.10"}}

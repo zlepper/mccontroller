@@ -27,4 +27,15 @@ angular.module("server").controller("ConfigController", ["$scope", "$http", func
     $scope.log = function (v) {
         console.log(v);
     };
-}]);
+}])
+    .directive("directory", function(RecursionHelper) {
+        return {
+            restrict: "E",
+            scope: {family: "="},
+            templateUrl: "/config/directory.html",
+            compile: function(element) {
+                return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){ });
+            }
+        }
+    })
+;

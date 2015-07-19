@@ -13,9 +13,9 @@ function isNullOrWhitespace(input) {
     return input.replace(/\s/g, '').length < 1;
 }
 
-var io = io("http://localhost:8080");
+var io = io();
 
-angular.module("server", ["ui.router", "ngAnimate", "ui.bootstrap", "ngFileUpload"]);
+angular.module("server", ["ui.router", "ngAnimate", "ui.bootstrap"]);
 
 var log = null;
 

@@ -1,4 +1,4 @@
-angular.module("server").controller("SetupController", ["$scope", "socket", "$http", "Upload", function ($scope, socket, $http, Upload) {
+angular.module("server").controller("SetupController", ["$scope", "socket", "$http", function ($scope, socket, $http) {
     $scope.forge = null;
     $scope.downloadProgress = 0;
     $scope.downloading = false;
@@ -17,35 +17,6 @@ angular.module("server").controller("SetupController", ["$scope", "socket", "$ht
     $scope.totalMods = 100;
     $scope.properties = null;
     $scope.customModURL = null;
-    $scope.files = [];
-    $scope.uploadProgress = {};
-    $scope.$watch("files", function () {
-        $scope.upload($scope.files);
-        console.log($scope.files);
-    }, true);
-
-    $scope.upload = function (files) {
-        if (files && files.length) {
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                Upload.upload({
-                    //url: "/uploadMod",
-                    url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
-                    fields: {
-                        'username': "Zlepper"
-                    },
-                    file: file
-                }).progress(function (evt) {
-                    console.log(evt);
-                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                    console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-                }).success(function (data, status, headers, config) {
-                    console.log(config);
-                    console.log('file ' + config.file.name + ' uploaded. Response: ' + data);
-                })
-            }
-        }
-    };
 
     log = function () {
         console.log($scope);
@@ -144,10 +115,12 @@ angular.module("server").controller("SetupController", ["$scope", "socket", "$ht
     });
 
     socket.on("modpackInstallationStatus:downloadProgressed", function (progress) {
+        $scope.installingPack = true;
         $scope.modDownloadProgress = progress;
     });
 
     socket.on("modpackInstallationStatus:modDownloadComplete", function () {
+        $scope.downloadingSolderPack = true;
         $scope.modDownloadProgress = 0;
     });
 

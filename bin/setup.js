@@ -11,7 +11,7 @@ var ifh = require("./../handlers/improvedFileHandler");
 var propParser = require("./../handlers/propertiesParser");
 
 function installForge(data) {
-    var dir = path.resolve(__dirname, "server", "forge");
+    var dir = path.resolve("server", "forge");
     mkdirp(dir, function (err) {
         if (err) {
             return;
@@ -46,7 +46,7 @@ function installForge(data) {
 }
 
 function installForgeInstall(forge) {
-    var serverDir = path.resolve(__dirname, "server");
+    var serverDir = path.resolve("server");
     var options = {
         cwd: serverDir
     };
@@ -65,7 +65,6 @@ function installForgeInstall(forge) {
     });
 
     listener.stderr.on("data", function (data) {
-        console.log("stderr: " + data);
         emit("installationStatus:stderr", data);
     });
 
@@ -123,7 +122,7 @@ function installMod(mods, length) {
     var f = path.resolve("server", "cache", mod.name + "-" + mod.version + ".zip");
     gethash(f, function (md5) {
         if (md5 && md5 == mod.md5) {
-            unzipFile(f, path.resolve(__dirname, "server"));
+            unzipFile(f, path.resolve("server"));
             if (mods.length > 0) {
                 installMod(mods, length);
             } else {
@@ -149,7 +148,7 @@ function installMod(mods, length) {
             res.on("end", function () {
                 emit("modpackInstallationStatus:modDownloadComplete", null);
                 file.end();
-                unzipFile(f, path.resolve(__dirname, "server"));
+                unzipFile(f, path.resolve("server"));
                 if (mods.length > 0) {
                     installMod(mods, length);
                 } else {
@@ -230,7 +229,7 @@ function installTechnicPack(data) {
         res.on("end", function () {
             file.end();
             emit("modpackInstallationStatus:downloadComplete", null)
-            unzipFile(f, path.resolve(__dirname, "server"));
+            unzipFile(f, path.resolve("server"));
         });
 
         res.on("error", function (error) {
@@ -241,9 +240,9 @@ function installTechnicPack(data) {
 }
 
 function prepareServerDir() {
-    ifh.rmdirSync(path.resolve(__dirname, "server", "mods"));
-    ifh.rmdirSync(path.resolve(__dirname, "server", "config"));
-    ifh.rmdirSync(path.resolve(__dirname, "server", "scripts"));
+    ifh.rmdirSync(path.resolve("server", "mods"));
+    ifh.rmdirSync(path.resolve("server", "config"));
+    ifh.rmdirSync(path.resolve("server", "scripts"));
 }
 
 function downloadAndInstallMod(data) {
@@ -255,7 +254,7 @@ function downloadAndInstallMod(data) {
     configObj.customMods.push(data);
 
     http.get(data.url, function (res) {
-        var file = path.resolve(__dirname, "server", "mods", data.name + "-" + data.version + ".jar");
+        var file = path.resolve("server", "mods", data.name + "-" + data.version + ".jar");
         var f = fs.createWriteStream(file);
         emit("setup:installingMod", JSON.stringify({name: data.name + "-" + data.version}));
         res.on("end", function () {
