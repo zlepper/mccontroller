@@ -6,13 +6,19 @@ var socket = null;
 var lastMessages = [];
 var config = require("../handlers/configHandler");
 var serverStatus = "offline";
+var propparser = require("../handlers/propertiesParser");
 
 /**
  * Call this function to start the local minecraft server
  */
 function startServer() {
   var path = require('path');
-    var serverDir = path.resolve(__dirname, "..", "server");
+    var serverDir = path.resolve("server");
+
+  if(checkEula() == false) {
+    emit("serverStatus:eulaNotAccepted");
+    return;
+  }
 
   var options = {
     cwd: serverDir
@@ -44,6 +50,17 @@ function startServer() {
       listener = null;
       setServerStatus("offline");
   });
+}
+
+function checkEula() {
+  var eula = fs.readFileSync(path.resolve("server", "eula.txt"));
+  var lines = eula.replace(/\r/g, "").split("\n");
+  lines.forEach(function(line) {
+    if(line == "eula=true") {
+      return true;
+    }
+  });
+  return false;
 }
 
 function setServerStatus(status) {

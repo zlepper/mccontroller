@@ -103,7 +103,6 @@ function installMods(mods) {
     var dir = path.resolve("server", "cache");
     mkdirp(dir, function (err) {
             if (err) {
-                console.log(err);
                 return;
             }
             emit("modpackInstallationStatus:totalMods", mods.length);
@@ -179,7 +178,6 @@ function unzipFile(zippath, outputfolder) {
                 var dirname = path.dirname(outputfile);
                 mkdirp(dirname, function (err) {
                     if (err) {
-                        console.log(err);
                         return;
                     }
                     readStream.pipe(fs.createWriteStream(outputfile));
