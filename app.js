@@ -9,6 +9,12 @@ var app = express();
 var bodyParser = require("body-parser");
 var io = null;
 var routes = require("./routes/routes");
+var fs = require("fs");
+try {
+    var th = fs.readFileSync(path.resolve(__dirname, "users.htpasswd"));
+} catch (err) {
+    fs.writeFileSync(path.resolve(__dirname, "users.htpasswd"), "admin:password", {encoding: "utf8"});
+}
 
 var basic = auth.basic({
     realm: "mcserver",
@@ -20,6 +26,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(auth.connect(basic), express.static("www"));
 app.use(auth.connect(basic), express.static("node_modules"));
 app.use("/", auth.connect(basic), routes);
+
+
 
 var server = require("http").Server(app);
 var serverController = require("./bin/serverController");

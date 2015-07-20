@@ -15,7 +15,7 @@ function isNullOrWhitespace(input) {
 
 var io = io();
 
-angular.module("server", ["ui.router", "ngAnimate", "ui.bootstrap"]);
+angular.module("server", ["ui.router", "ngAnimate", "ui.bootstrap", "RecursionHelper"]);
 
 var log = null;
 

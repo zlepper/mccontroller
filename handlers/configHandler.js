@@ -8,7 +8,7 @@
 
     path = require("path");
 
-    configPath = path.resolve(__dirname, "config.json");
+    configPath = path.resolve("config.json");
 
     exports.loadConfigObj = function () {
         var data, e;

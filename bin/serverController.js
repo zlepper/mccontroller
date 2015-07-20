@@ -55,17 +55,18 @@ function startServer() {
 }
 
 function checkEula() {
+    var eula = "";
     try {
-        var eula = fs.readFileSync(path.resolve("server", "eula.txt"));
+        eula = fs.readFileSync(path.resolve("server", "eula.txt"), {encoding: "utf8"});
     } catch (err) {
         return false;
     }
     var lines = eula.replace(/\r/g, "").split("\n");
-    lines.forEach(function (line) {
-        if (line == "eula=true") {
+    for(var i = 0; i < lines.length; i++) {
+        if (lines[i] == "eula=true") {
             return true;
         }
-    });
+    }
     return false;
 }
 
@@ -104,6 +105,10 @@ function sendMessageToClientConsole(message) {
     }
 }
 
+function acceptEula() {
+    fs.writeFileSync(path.resolve("server", "eula.txt"), "eula=true", {encoding: "utf8"});
+    startServer();
+}
 exports.init = function (i) {
     io = i;
 
@@ -123,6 +128,10 @@ exports.init = function (i) {
 
         s.on("function:startupServer", function () {
             startServer();
+        });
+
+        s.on("eula:accepted", function() {
+            acceptEula();
         });
 
         setServerStatus(serverStatus);
