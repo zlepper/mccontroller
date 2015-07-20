@@ -27,8 +27,15 @@ function startServer() {
     };
     var spawn = require('child_process').spawn;
     var configObject = config.loadConfigObj();
+    if(!configObject.executable) {
+        sendMessageToClientConsole("You need to install forge from the setup tab first!");
+        return;
+    }
+    var maxMemory = configObject.maxMemory ? configObject.maxMemory : 4096;
+    var minMemory = configObject.minMemory ? configObject.minMemory : 4096;
 
-    listener = spawn('java', ["-Xmx" + configObject.maxMemory + "M", "-Xms" + configObject.minMemory + "M", "-jar", configObject.executable, "nogui"], options);
+
+    listener = spawn('java', ["-Xmx" + maxMemory + "M", "-Xms" + minMemory + "M", "-jar", configObject.executable, "nogui"], options);
     listener.on("error", function (err) {
         console.log(err);
     });
