@@ -13,11 +13,7 @@ angular.module("server").controller("ServerController", ["$scope", "socket", fun
     });
 
     socket.on("serverStatus:eulaNotAccepted", function() {
-        if(confirm("Do you accept the eula? https://account.mojang.com/documents/minecraft_eula")) {
-            $scope.startServer();
-        } else {
-            alert("You have to accept the eula to start the server.");
-        }
+        alert("You have to accept the eula to start the server.");
     });
 
     $scope.sendCommand = function () {
