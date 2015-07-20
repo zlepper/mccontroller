@@ -97,9 +97,24 @@
             </div>
             <input type="submit" value="Download and install" class="btn btn-default">
         </form>
-        <hr>
     </div>
 </div>
+<hr>
+<form onsubmit="return false;" ng-submit="saveMemory()">
+    <div class="form-group">
+        <label class="control-label" for="minimumMemory">Minimum Memory <small>In MB</small></label>
+        <input id="minimumMemory" ng-model="memory.min" type="number" class="form-control" step="128" min="0">
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="maximumMemory">Maximum Memory <small>In MB</small></label>
+        <input id="maximumMemory" ng-model="memory.max" type="number" class="form-control" step="128" min="0">
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="permGen">PermGen <small>In MB</small></label>
+        <input id="permGen" ng-model="memory.permgen" type="number" class="form-control" step="64" min="0">
+    </div>
+    <input type="submit" value="Save" class="btn btn-default">
+</form>
 <hr>
 <div class="row" ng-if="!properties">
     <div class="col-md-12">

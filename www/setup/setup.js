@@ -17,6 +17,11 @@ angular.module("server").controller("SetupController", ["$scope", "socket", "$ht
     $scope.totalMods = 100;
     $scope.properties = null;
     $scope.customModURL = null;
+    /*$scope.memory = {
+        min: 4096,
+        max: 4096,
+        permgen: 128
+    };*/
 
     log = function () {
         console.log($scope);
@@ -187,4 +192,12 @@ angular.module("server").controller("SetupController", ["$scope", "socket", "$ht
         socket.emit("setup:installCustomMod", JSON.stringify(o));
     };
     socket.on("setup:installingMod")
+
+    $scope.saveMemory = function() {
+        socket.emit("setup:setMemory", JSON.stringify($scope.memory));
+    };
+    socket.on("setup:setMemory", function(data) {
+        console.log(data);
+        $scope.memory = JSON.parse(data);
+    })
 }]);

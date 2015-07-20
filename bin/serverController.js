@@ -31,11 +31,11 @@ function startServer() {
         sendMessageToClientConsole("You need to install forge from the setup tab first!");
         return;
     }
-    var maxMemory = configObject.maxMemory ? configObject.maxMemory : 4096;
-    var minMemory = configObject.minMemory ? configObject.minMemory : 4096;
+    var maxMemory = configObject.memory.max ? configObject.memory.max : 4096;
+    var minMemory = configObject.memory.min ? configObject.memory.min : 4096;
+    var permGen = configObject.memory.permgen ? configObject.memory.permgen : 128;
 
-
-    listener = spawn('java', ["-Xmx" + maxMemory + "M", "-Xms" + minMemory + "M", "-jar", configObject.executable, "nogui"], options);
+    listener = spawn('java', ["-Xmx" + maxMemory + "M", "-Xms" + minMemory + "M", "-XX:MaxPermSize=" + permGen + "M", "-jar", configObject.executable, "nogui"], options);
     listener.on("error", function (err) {
         console.log(err);
     });

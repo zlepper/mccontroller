@@ -79,7 +79,7 @@ function installForgeInstall(forge) {
 
 function emit(event, data) {
     var sdata = String(data);
-    //if (data) console.log(sdata);
+    if (data) console.log(sdata);
     if (socket != null) {
         socket.emit(event, sdata);
         socket.broadcast.emit(event, sdata);
@@ -263,6 +263,11 @@ function downloadAndInstallMod(data) {
     });
 }
 
+function setMemory(memory) {
+    cfg = config.loadConfigObj();
+    cfg.memory = memory;
+    config.saveConfig();
+}
 module.exports = function (i) {
     io = i;
 
@@ -304,5 +309,11 @@ module.exports = function (i) {
         s.on("setup:installCustomMod", function (data) {
             downloadAndInstallMod(JSON.parse(data));
         });
+
+        s.on("setup:setMemory", function(data) {
+            setMemory(JSON.parse(data));
+        });
+        //console.log(config.loadConfigObj().memory);
+        emit("setup:setMemory", JSON.stringify(config.loadConfigObj().memory));
     })
 };
