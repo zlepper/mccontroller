@@ -94,6 +94,7 @@ function installSolderPack(buildUrl) {
             body += chunk;
         });
         res.on("end", function () {
+            console.log(body);
             installMods(JSON.parse(body).mods);
         });
     });

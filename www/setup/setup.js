@@ -88,15 +88,34 @@ angular.module("server").controller("SetupController", ["$scope", "socket", "$ht
     });
 
     $scope.$watch("technicPlatformUrl", function () {
-        $scope.getPlatformInfo();
+        if(!$scope.technicPlatformUrl) return;
+        if($scope.technicPlatformUrl.indexOf("http://api.technicpack.net/modpack/") > -1) {
+            $scope.getPlatformInfo();
+        } else {
+            console.log("Getting solder info");
+            $scope.getSolderInfo();
+        }
     });
+
+    $scope.getSolderInfo = function() {
+        var d = {url: $scope.technicPlatformUrl};
+        $http.post("/solderInfo", d).then(function (rep) {
+            console.log(rep);
+            $scope.platformPackInfo = {
+                displayName: rep.data.display_name,
+                description: "",
+                minecraft: "perBuild",
+                builds: rep.data.builds,
+                slug: $scope.technicPlatformUrl
+            };
+        });
+    };
 
     $scope.installSolderPack = function () {
         if (!$scope.selectedBuild) return;
         var packet = {
-            url: $scope.platformPackInfo.slug + "/" + $scope.selectedBuild,
-            name: $scope.platformPackInfo.displayName,
-            minecraft: $scope.platformPackInfo.minecraft
+            url: $scope.platformPackInfo.slug + ($scope.platformPackInfo.slug.lastIndexOf("/") == $scope.platformPackInfo.slug.length-1 ? "" : "/") + $scope.selectedBuild,
+            name: $scope.platformPackInfo.displayName
         };
         socket.emit("setup:installSolderPack", packet);
     };
